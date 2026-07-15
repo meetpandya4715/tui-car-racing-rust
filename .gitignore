@@ -1,0 +1,7 @@
+/target/
+/.codex/
+/.agents/
+/*.png
+/*.ffscript
+/*.mp4
+!/Terminal Rush - minimal.mp4

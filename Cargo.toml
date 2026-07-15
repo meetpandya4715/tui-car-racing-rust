@@ -1,0 +1,12 @@
+[package]
+name = "terminal-rush"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+crossterm = "0.29"
+rand = "0.9"
+
+[profile.release]
+lto = "thin"
+strip = true
