@@ -1,0 +1,35 @@
+{
+  "name": "ascii-apex",
+  "version": "0.1.0",
+  "description": "An endless night-highway racing game that runs in your terminal.",
+  "keywords": [
+    "game",
+    "racing",
+    "terminal",
+    "tui",
+    "ascii",
+    "rust",
+    "cli"
+  ],
+  "homepage": "https://github.com/meetpandya4715/tui-car-racing-rust#readme",
+  "bugs": "https://github.com/meetpandya4715/tui-car-racing-rust/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meetpandya4715/tui-car-racing-rust.git"
+  },
+  "bin": {
+    "ascii-apex": "bin/ascii-apex.js"
+  },
+  "files": [
+    "bin/"
+  ],
+  "scripts": {
+    "test": "node test/launcher.test.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

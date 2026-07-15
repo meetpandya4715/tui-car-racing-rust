@@ -38,7 +38,7 @@ fn main() -> ExitCode {
     match result {
         Ok(()) => ExitCode::SUCCESS,
         Err(error) => {
-            eprintln!("terminal-rush: {error}");
+            eprintln!("ascii-apex: {error}");
             ExitCode::FAILURE
         }
     }

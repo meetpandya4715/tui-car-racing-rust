@@ -357,7 +357,7 @@ impl Renderer {
         self.draw_track(road, 0, false, 0.0);
 
         self.frame
-            .text(1, 0, "TERMINAL RUSH", Style::new(RED, CANVAS, true));
+            .text(1, 0, "ASCII APEX", Style::new(RED, CANVAS, true));
         let right_label = "NIGHT // 01";
         self.frame.text(
             i32::from(self.frame.width) - i32::try_from(right_label.len()).unwrap_or(0) - 1,
@@ -508,7 +508,7 @@ impl Renderer {
 
         if compact {
             self.frame
-                .text(1, 0, "TERMINAL RUSH", Style::new(RED, CANVAS, true));
+                .text(1, 0, "ASCII APEX", Style::new(RED, CANVAS, true));
             self.frame.text(16, 0, &speed, DEFAULT_STYLE);
             self.frame.text(20, 0, "KM/H", HUD_STYLE);
             self.frame.text(27, 0, "SCORE", DEFAULT_STYLE);
@@ -535,7 +535,7 @@ impl Renderer {
             self.draw_rule(2);
         } else if self.frame.width < 100 {
             self.frame
-                .text(1, 0, "TERMINAL RUSH", Style::new(RED, CANVAS, true));
+                .text(1, 0, "ASCII APEX", Style::new(RED, CANVAS, true));
             self.frame.text(17, 0, &speed, DEFAULT_STYLE);
             self.frame.text(21, 0, "KM/H", HUD_STYLE);
             self.frame.text(28, 0, "SCORE", DEFAULT_STYLE);
@@ -555,7 +555,7 @@ impl Renderer {
             self.draw_rule(1);
         } else {
             self.frame
-                .text(2, 0, "TERMINAL RUSH", Style::new(RED, CANVAS, true));
+                .text(2, 0, "ASCII APEX", Style::new(RED, CANVAS, true));
             self.frame.text(28, 0, &speed, DEFAULT_STYLE);
             self.frame.text(32, 0, "KM/H", HUD_STYLE);
             self.frame.text(44, 0, "SCORE", DEFAULT_STYLE);
@@ -1357,7 +1357,7 @@ mod tests {
             .expect("render should succeed");
         let frame = frame_text(&renderer.frame);
 
-        assert!(frame.contains("TERMINAL RUSH"));
+        assert!(frame.contains("ASCII APEX"));
         assert!(frame.contains("N2O"));
         assert!(frame.contains("ROOKIE"));
         assert!(frame.contains("SCORE"));
@@ -1373,7 +1373,7 @@ mod tests {
             .expect("render should succeed");
         let frame = frame_text(&renderer.frame);
 
-        assert!(frame.contains("TERMINAL RUSH"));
+        assert!(frame.contains("ASCII APEX"));
         assert!(frame.contains("N I G H T   E N D U R A N C E"));
         assert!(frame.contains("[ ENTER ]  START ENGINE"));
         assert!(frame.contains("CLOSE CALLS REFILL NITRO"));
@@ -1419,7 +1419,7 @@ mod tests {
             let footer = row_text(&renderer.frame, u16::try_from(road.bottom + 2).unwrap());
             assert_eq!(header.len(), usize::from(width));
             assert_eq!(footer.len(), usize::from(width));
-            assert!(header.contains("TERMINAL RUSH"));
+            assert!(header.contains("ASCII APEX"));
             assert!(header.contains("SCORE"));
             assert!(header.contains("PAUSE"));
             assert!(footer.contains("00:00.1"));
