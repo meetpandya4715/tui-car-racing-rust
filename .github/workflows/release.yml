@@ -16,7 +16,7 @@ jobs:
       matrix:
         include:
           - runner: ubuntu-latest
-            target: x86_64-unknown-linux-gnu
+            target: x86_64-unknown-linux-musl
             binary: ascii-apex
             asset: ascii-apex-linux-x64
           - runner: windows-latest
@@ -39,6 +39,16 @@ jobs:
           targets: ${{ matrix.target }}
       - name: Build release binary
         run: cargo build --locked --release --target ${{ matrix.target }}
+      - name: Verify Linux binary is statically linked
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          binary="target/${{ matrix.target }}/release/${{ matrix.binary }}"
+          if readelf -d "${binary}" | grep -q '(NEEDED)'; then
+            echo "::error::Linux release binary has dynamic library dependencies"
+            readelf -d "${binary}"
+            exit 1
+          fi
       - name: Stage release asset
         shell: bash
         run: |

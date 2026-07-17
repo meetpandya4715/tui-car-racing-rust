@@ -18,7 +18,7 @@ caches it locally. Node.js 18 or newer is required.
 Prebuilt releases support:
 
 - Windows x64
-- Linux x64
+- Linux x64 (statically linked for broad distribution compatibility)
 - macOS x64
 - macOS Apple silicon
 
