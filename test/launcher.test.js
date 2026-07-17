@@ -18,7 +18,7 @@ test("rejects unsupported platforms clearly", () => {
 test("builds a versioned GitHub release URL", () => {
   assert.equal(
     releaseUrl("ascii-apex-linux-x64"),
-    "https://github.com/meetpandya4715/tui-car-racing-rust/releases/download/v0.1.1/ascii-apex-linux-x64",
+    "https://github.com/meetpandya4715/tui-car-racing-rust/releases/download/v0.1.2/ascii-apex-linux-x64",
   );
 });
 

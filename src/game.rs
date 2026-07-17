@@ -8,12 +8,12 @@ use crate::{
 };
 
 const MIN_SPEED: f32 = 55.0;
-const MAX_SPEED: f32 = 180.0;
-const BOOST_MAX_SPEED: f32 = 220.0;
-const START_SPEED: f32 = 68.0;
-const ACCELERATION: f32 = 40.0;
-const BOOST_ACCELERATION: f32 = 95.0;
-const BRAKING: f32 = 80.0;
+const MAX_SPEED: f32 = 240.0;
+const BOOST_MAX_SPEED: f32 = 320.0;
+const START_SPEED: f32 = 80.0;
+const ACCELERATION: f32 = 52.0;
+const BOOST_ACCELERATION: f32 = 120.0;
+const BRAKING: f32 = 95.0;
 const COAST_DECELERATION: f32 = 8.0;
 const OVERSPEED_DECELERATION: f32 = 35.0;
 const STEERING_SPEED: f32 = 25.0;
@@ -24,10 +24,10 @@ const NEAR_MISS_GAP_CELLS: i32 = 2;
 const STREAK_WINDOW: f32 = 4.5;
 const MAX_STREAK: u8 = 5;
 const NITRO_MAX: f32 = 100.0;
-const NITRO_START: f32 = 50.0;
-const NITRO_DRAIN_PER_SECOND: f32 = 35.0;
-const NITRO_RECHARGE_PER_SECOND: f32 = 6.0;
-const NITRO_NEAR_MISS_GAIN: f32 = 18.0;
+const NITRO_START: f32 = 70.0;
+const NITRO_DRAIN_PER_SECOND: f32 = 15.0;
+const NITRO_RECHARGE_PER_SECOND: f32 = 9.0;
+const NITRO_NEAR_MISS_GAIN: f32 = 25.0;
 const EVENT_DISPLAY_SECONDS: f32 = 0.9;
 const LEVEL_EVENT_SECONDS: f32 = 1.2;
 const DISTANCE_PER_LEVEL: f32 = 500.0;
@@ -507,9 +507,9 @@ impl Game {
     }
 
     fn scroll_speed(&self) -> f32 {
-        5.0 + 8.2 * speed_ratio(self.speed)
-            + 2.8 * difficulty_progress(self.distance)
-            + 3.0 * boost_ratio(self.speed)
+        5.0 + 8.8 * speed_ratio(self.speed)
+            + 3.0 * difficulty_progress(self.distance)
+            + 4.0 * boost_ratio(self.speed)
     }
 
     fn refresh_score(&mut self) {
@@ -1381,8 +1381,8 @@ mod tests {
             },
         );
         assert!(game.boosting());
-        assert!((game.speed() - 109.5).abs() < 0.000_1);
-        assert!((game.nitro() - 46.5).abs() < 0.000_1);
+        assert!((game.speed() - 112.0).abs() < 0.000_1);
+        assert!((game.nitro() - 48.5).abs() < 0.000_1);
 
         game.speed = 100.0;
         game.nitro = 50.0;
@@ -1395,7 +1395,7 @@ mod tests {
             },
         );
         assert!(!game.boosting());
-        assert!((game.speed() - 92.0).abs() < 0.000_1);
+        assert!((game.speed() - 90.5).abs() < 0.000_1);
         assert_eq!(game.nitro(), 50.0);
 
         game.nitro = 0.0;
@@ -1410,7 +1410,7 @@ mod tests {
         assert_eq!(game.nitro(), 0.0);
 
         game.update(0.1, ControlInput::default());
-        assert!((game.nitro() - 0.6).abs() < 0.000_1);
+        assert!((game.nitro() - 0.9).abs() < 0.000_1);
 
         game.speed = BOOST_MAX_SPEED - 1.0;
         game.nitro = NITRO_MAX;
@@ -1426,11 +1426,57 @@ mod tests {
     }
 
     #[test]
+    fn speed_and_nitro_tuning_provide_a_sustained_arcade_boost() {
+        let mut cruise = started_game(66);
+        cruise.spawn_timer = 100.0;
+        cruise.speed = MAX_SPEED;
+        cruise.update(
+            0.1,
+            ControlInput {
+                accelerate: true,
+                ..ControlInput::default()
+            },
+        );
+        assert!(cruise.distance() > 6.6);
+
+        let mut game = started_game(65);
+        game.spawn_timer = 100.0;
+
+        // The starting tank should sustain more than four seconds of boost.
+        for _ in 0..240 {
+            game.update(
+                1.0 / 60.0,
+                ControlInput {
+                    boost: true,
+                    ..ControlInput::default()
+                },
+            );
+        }
+        assert!(game.boosting());
+        assert!(game.speed() > 319.9);
+        assert!(game.nitro() > 9.9);
+
+        // A full tank should still have fuel after six continuous seconds.
+        game.nitro = NITRO_MAX;
+        for _ in 0..360 {
+            game.update(
+                1.0 / 60.0,
+                ControlInput {
+                    boost: true,
+                    ..ControlInput::default()
+                },
+            );
+        }
+        assert!(game.boosting());
+        assert!(game.nitro() > 9.9);
+    }
+
+    #[test]
     fn nearly_empty_nitro_only_boosts_for_the_available_fraction_of_a_tick() {
         let mut game = started_game(63);
         game.spawn_timer = 100.0;
         game.speed = 100.0;
-        game.nitro = 0.35; // One hundredth of a second at the configured drain rate.
+        game.nitro = 0.15; // One hundredth of a second at the configured drain rate.
 
         game.update(
             0.1,
@@ -1440,8 +1486,8 @@ mod tests {
             },
         );
 
-        // 0.01 s of boost (+0.95) followed by 0.09 s of coasting (-0.72).
-        assert!((game.speed() - 100.23).abs() < 0.000_1);
+        // 0.01 s of boost (+1.20) followed by 0.09 s of coasting (-0.72).
+        assert!((game.speed() - 100.48).abs() < 0.000_1);
         assert!(game.nitro() < 0.000_1);
         assert!(game.boosting());
 
@@ -1470,7 +1516,7 @@ mod tests {
     fn overspeed_falls_smoothly_to_the_normal_cap_without_boost() {
         let mut game = started_game(61);
         game.spawn_timer = 100.0;
-        game.speed = 200.0;
+        game.speed = MAX_SPEED + 20.0;
 
         game.update(
             0.1,
@@ -1479,7 +1525,7 @@ mod tests {
                 ..ControlInput::default()
             },
         );
-        assert!((game.speed() - 196.5).abs() < 0.000_1);
+        assert!((game.speed() - (MAX_SPEED + 16.5)).abs() < 0.000_1);
 
         for _ in 0..100 {
             game.update(
