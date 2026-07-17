@@ -87,8 +87,9 @@ movement on terminals that only report presses and repeats.
   points up to `x5`.
 - Passing with only one or two cells of clearance earns a near-miss bonus and
   refills nitro.
-- Nitro starts half full. Hold Space for speeds above the normal limit; release
-  Space to recharge it.
+- Normal speed tops out at 240 km/h, while nitro pushes the car to 320 km/h.
+- Nitro starts at 70%. Hold Space for up to 4.7 seconds from the starting tank
+  or 6.7 seconds when full; release Space to recharge it.
 
 ## Build from source
 
